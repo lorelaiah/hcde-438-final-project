@@ -25,8 +25,5 @@ Calendar/mood tracking tab
 Recommendations (quotes, music, etc.)
 Breathing exercises, other resources
 
-
-
-
 Navigation flow:
 Once the user logs in, the calendar will pop up and they will be able to log their mood for the day. Once they log their mood, they can view the recommendations page which gives them music and quotes based on their mood for that specific day. The songs and quotes will relate to their mood to help improve their mindfulness. it ‘s kind of like a journal because they can log their mood and reflect on previous ones to view their progress. They can also view previous recommendations to keep track of all the recommendations they get.
