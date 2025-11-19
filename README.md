@@ -1,16 +1,32 @@
 # hcde final project - lorelai & chaelynn
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project Concept and Description
+We want to make a website that helps users practice mindfulness by checking in with themselves every day/throughout the day. They will be able to track their mood, and it may also include affirmations/quotes, meditative music recommendations, relaxation exercises, etc.
+Target Audience and User Stories
+Our intended users are people who want to work on their mindfulness or people who are prone to stress. Reflecting and providing inspiring quotes and music recommendations. 
+User statements:
+As a student, I want to log my mood daily so that I can track my mental well-being
+As a user, I want to get affirmations so that I feel encouraged
+As a music lover, I want to play focus music so that I can study calmly
+Our project meets user needs by allowing them to log and track their mood and provide affirmations and song recommendations. This helps them reflect on their stress and provides resources (music and quotes) to practice mindfulness. 
+Technical Architecture Plan
+React:
+For components, hooks
+Firebase:
+Google and/or email/password login
+Store user data
+APIs:
+ZenQuote: https://zenquotes.io/
+Spotify: https://developer.spotify.com/documentation/web-api
+Wireframes
+Key screens:
+Login / sign up
+Calendar/mood tracking tab
+Recommendations (quotes, music, etc.)
+Breathing exercises, other resources
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Navigation flow:
+Once the user logs in, the calendar will pop up and they will be able to log their mood for the day. Once they log their mood, they can view the recommendations page which gives them music and quotes based on their mood for that specific day. The songs and quotes will relate to their mood to help improve their mindfulness. it ‘s kind of like a journal because they can log their mood and reflect on previous ones to view their progress. They can also view previous recommendations to keep track of all the recommendations they get.
