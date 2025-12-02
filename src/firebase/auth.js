@@ -5,6 +5,8 @@ import { auth } from "./config";
 export const signUpUser = async (email, password) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(userCredential);
+        console.log(userCredential.user);
         return { user: userCredential.user, error: null };
     } catch (error) {
         return { user: null, error: error.message };

@@ -1,16 +1,34 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import { useAuth } from "../components/authContext.jsx"; 
 
-const Navbar = () => (
-    <nav>
-        <Link to="/">MOOD TRACKING </Link>
+const Navbar = () => {
+    const { currentUser, loading } = useAuth();
 
-        <Link to="/recommendations"> RECOMMENDATIONS </Link>
+    if (loading) {
+        return (
+            <div>loading...</div>
+        );
+    }
 
-        <Link to="/login"> LOGIN </Link>
+    if (!currentUser) {
+        return (
+        <nav>
+            <Link to="/login"> LOGIN </Link>
 
-        <Link to="/profile"> PROFILE</Link>
-    </nav>
-);
+        </nav>
+        )
+    };
+    return (
+        <nav>
+            <Link to="/">MOOD TRACKING </Link>
+
+            <Link to="/recommendations"> RECOMMENDATIONS </Link>
+
+            <Link to="/profile"> PROFILE</Link>
+        </nav>
+    );
+
+};
 
 export default Navbar;

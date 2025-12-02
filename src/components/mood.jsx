@@ -1,20 +1,21 @@
 import ButtonSet  from "./buttonSet.jsx";
 import { useState } from "react";
 import { db } from "../firebase/config.js";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
+import { useAuth } from "./authContext.jsx"; 
 
 
-const updateMood = async (docId, newData) => {
+const updateMood = async (docId, newData, user) => {
     try {
-        const docRef = doc(db, "days", docId); 
-        await setDoc(docRef, newData);
+        const docRef = doc(db, "users", user, "moods", docId); 
+        await setDoc(docRef, newData, { merge : true });
         console.log("Document updated successfully!");
     } catch (error) {
         console.error("Error saving document:", error);
     }
 };
 
-const Mood = ({ moodId }) => {
+const Mood = ({ moodId, user }) => {
     const [docId, setDocId] = useState(moodId);
     const [saved, setSaved] = useState(false);
     const [energy, setEnergy] = useState();
@@ -38,7 +39,7 @@ const Mood = ({ moodId }) => {
                 moodLevel : mood,
                 intensityLevel : intensity,
             }
-            await updateMood(docId, newData);
+            await updateMood(docId, newData, user);
 
             setSaved(true);
         }

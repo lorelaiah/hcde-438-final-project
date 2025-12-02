@@ -1,17 +1,46 @@
 import React from 'react';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../components/authContext.jsx"; 
+import { logoutUser } from "../firebase/auth";
 
 const Profile = () => {
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate();
+    const { currentUser, loading } = useAuth();
 
-    // return (
-    //     <div>
-    //         <h1>profile</h1>
-    //         <a href="http://127.0.0.1:8888/callback">log into spotify</a>
-    //         <p>your name</p>
-    //         <p>your email</p>
-    //         <p>blah blahbblah</p>
-    //         <button>sign out</button>
-    //     </div>
-    // );
+    if (!currentUser) {
+        navigate("/login");
+    }
+
+    const handleSignOut = async () => {
+        setError("");
+        setMessage("");
+        
+        try {
+        const { success, error } = await logoutUser();
+        
+        if (!success) {
+            setError(error || "Failed to log out");
+            return;
+        }
+        
+        navigate("/");
+        } catch (err) {
+        setError("An unexpected error occurred");
+        }
+    };
+
+    return (
+        <div>
+            <h1>profile</h1>
+            <p>{currentUser.name}</p>
+            <p>{currentUser.email}</p>
+            <p>date joined: {currentUser.date}</p>
+            <button onClick={handleSignOut}>sign out</button>
+        </div>
+    );
 };
 
 
