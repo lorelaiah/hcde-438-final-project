@@ -5,6 +5,7 @@ import Profile from './pages/profile.jsx';
 import MoodTracking from './pages/mood-tracking.jsx';
 import Recommendations from './pages/recommendations.jsx';
 import Login from './pages/login.jsx';
+import SignUp from './pages/sign-up.jsx';
 
 const App = () => (
     <div>
@@ -13,6 +14,7 @@ const App = () => (
             <Route path="/" element={<MoodTracking />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/sign-up" element={<SignUp />} />
             {/* <Route path="/mood-tracking" element={</>} /> */}
             <Route path="/recommendations" element={<Recommendations />} />
         </Routes>
