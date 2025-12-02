@@ -3,7 +3,7 @@ import React from 'react';
 const Profile = () => (
     <div>
         <h1>profile</h1>
-        <a href="">log into spotify</a>
+        <a href="http://127.0.0.1:8888/callback">log into spotify</a>
         <p>your name</p>
         <p>your email</p>
         <p>blah blahbblah</p>
