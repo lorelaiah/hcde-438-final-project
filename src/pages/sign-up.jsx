@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../firebase/auth";
+import { signUpUser } from "../firebase/auth";
 
-const Login = () => {
+const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -12,10 +13,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Validate password match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    // Validate password strength
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const { user, error } = await loginUser(email, password);
+      const { user, error } = await signUpUser(email, password);
       
       if (error) {
         setError(error);
@@ -24,7 +38,7 @@ const Login = () => {
       
       navigate("/");
     } catch (err) {
-      setError("Failed to log in. Please try again.");
+      setError("Failed to create an account. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -33,7 +47,7 @@ const Login = () => {
   return (
     <div className="auth-container">
       <div className="auth-form-container">
-        <h2>Log In</h2>
+        <h2>Create Account</h2>
         {error && <div className="auth-error">{error}</div>}
         
         <form onSubmit={handleSubmit} className="auth-form">
@@ -59,21 +73,32 @@ const Login = () => {
             />
           </div>
           
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          
           <button 
             type="submit" 
             className="auth-button"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Log In"}
+            {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
         
         <div className="auth-link">
-          Don't have an account? <Link to="/sign-up">Sign Up</Link>
+          Already have an account? <Link to="/login">Log In</Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default SignUp;
