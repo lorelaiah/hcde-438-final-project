@@ -1,9 +1,13 @@
 import RateButton from "./rateButton.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const ButtonSet = ({id, editable}) => {
+const ButtonSet = ({editable, onDataChange}) => {
     const options = [1, 2, 3, 4, 5];
     const [selectedButton, setSelectedButton] = useState(); 
+
+    useEffect(() => {
+        onDataChange(selectedButton);
+    }, [selectedButton, onDataChange]);
 
     const handleClick = (num) => {
         if (editable) {
@@ -15,7 +19,6 @@ const ButtonSet = ({id, editable}) => {
         <div>
             {options.map((option) => (
                 <RateButton num={option} onSelect={handleClick} isSelected={selectedButton === option} />
-
             ))}
         </div>
 

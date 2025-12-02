@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 const RateButton = ({num, onSelect, isSelected}) => {
     const handleClick = () => {
