@@ -1,7 +1,7 @@
 import ButtonSet  from "./buttonSet.jsx";
 import { useState } from "react";
 import { db } from "../firebase/config.js";
-import { collection, addDoc, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 
 const updateMood = async (docId, newData) => {

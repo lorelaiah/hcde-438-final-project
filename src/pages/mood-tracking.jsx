@@ -2,7 +2,7 @@
 import Mood from "../components/mood.jsx";
 import { db } from "../firebase/config.js";
 import { useState } from "react";
-import { collection, addDoc, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
+import { collection, doc } from "firebase/firestore";
 
 
 const MoodTracking = () => {
