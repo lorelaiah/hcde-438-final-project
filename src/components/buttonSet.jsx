@@ -18,7 +18,7 @@ const ButtonSet = ({editable, onDataChange}) => {
     return (
         <div>
             {options.map((option) => (
-                <RateButton num={option} onSelect={handleClick} isSelected={selectedButton === option} />
+                <RateButton key={option} num={option} onSelect={handleClick} isSelected={selectedButton === option} />
             ))}
         </div>
 
