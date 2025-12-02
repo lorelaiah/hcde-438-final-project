@@ -14,6 +14,7 @@ const App = () => {
     if (!currentUser) {
         return (
             <div>
+                <Navbar />
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/profile" element={<Login />} />

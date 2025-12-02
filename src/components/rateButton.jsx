@@ -4,7 +4,7 @@ const RateButton = ({num, onSelect, isSelected}) => {
         onSelect(num);
     };
     return (
-        <button onClick={handleClick}>{isSelected ? <h2>{num}</h2> : num}</button>
+        <button onClick={handleClick} className={isSelected && "selected"}>{num}</button>
     );};
 
 export default RateButton;

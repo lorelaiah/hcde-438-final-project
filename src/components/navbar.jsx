@@ -14,18 +14,16 @@ const Navbar = () => {
     if (!currentUser) {
         return (
         <nav>
-            <Link to="/login"> LOGIN </Link>
-
+            <p>logo or something</p>
         </nav>
         )
     };
     return (
         <nav>
-            <Link to="/">MOOD TRACKING </Link>
-
-            <Link to="/recommendations"> RECOMMENDATIONS </Link>
-
-            <Link to="/profile"> PROFILE</Link>
+            <p>logo or something</p>
+            <Link className="nav-link" to="/">MOOD TRACKING </Link>
+            <Link className="nav-link" to="/recommendations"> RECOMMENDATIONS </Link>
+            <Link className="nav-link" to="/profile"> PROFILE</Link>
         </nav>
     );
 
