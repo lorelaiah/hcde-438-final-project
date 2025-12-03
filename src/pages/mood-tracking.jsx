@@ -2,7 +2,7 @@
 import Mood from "../components/mood.jsx";
 import { db } from "../firebase/config.js";
 import { useState, useEffect } from "react";
-import { collection, doc, getDocs, query, setDoc, onSnapshot, orderBy } from "firebase/firestore";
+import { collection, doc, query, setDoc, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "../components/authContext.jsx"; 
 import { Link } from "react-router-dom";
 

@@ -1,7 +1,7 @@
 import ButtonSet  from "./buttonSet.jsx";
 import { useState, useEffect } from "react";
 import { db } from "../firebase/config.js";
-import { doc, setDoc, collection, getDoc, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "./authContext.jsx"; 
 
 
@@ -9,7 +9,6 @@ const updateMood = async (docId, newData, user) => {
     try {
         const docRef = doc(db, "users", user, "moods", docId); 
         await setDoc(docRef, newData, { merge : true });
-        console.log("Document updated successfully!");
     } catch (error) {
         console.error("Error saving document:", error);
     }
@@ -21,8 +20,8 @@ const Mood = ({ moodId }) => {
     const [energy, setEnergy] = useState();
     const [mood, setMood] = useState();
     const [intensity, setIntensity] = useState();
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
+    const [date, setDate] = useState(new Date().toLocaleDateString());
+    const [time, setTime] = useState(new Date().toLocaleTimeString());
     const { currentUser, loading } = useAuth();  
 
 
@@ -38,11 +37,8 @@ const Mood = ({ moodId }) => {
                     setDate(data.date || "");
                     setTime(data.time || "");
                     setEnergy(data.energyLevel || "");
-                    console.log("energy level saved " + data.energyLevel);
                     setMood(data.moodLevel || "");
-                    console.log("mood level saved " + data.moodLevel);
                     setIntensity(data.intensityLevel || "");
-                    console.log("intensity level saved " + data.intensityLevel);
                     setSaved(true);
                     if (!data.date) {
                         setSaved(false);
@@ -50,11 +46,7 @@ const Mood = ({ moodId }) => {
                 }
             }
         };
-
         getMoodData();
-    console.log("energy level " + energy);
-    console.log("mood level " + mood);
-    console.log("intensity level " + intensity);
     }, [docId, currentUser]);
 
 
@@ -98,23 +90,31 @@ const Mood = ({ moodId }) => {
 
     return (
     <div className="mood">
-        <h3>Last Updated: {date}, {time}</h3>
-        <div className="button-set">
-            <p>Energy</p>
-            <ButtonSet id="energy-buttons" editable={!saved} onDataChange={handleEnergy} initial={energy}/>
-        </div>
-        <div className="button-set">
-            <p>Mood</p>
-            <ButtonSet id="mood-buttons" editable={!saved} onDataChange={handleMood} initial={mood}/>
-        </div>
-        <div className="button-set">
-            <p>Intensity</p>
-            <ButtonSet id="intensity-buttons" editable={!saved} onDataChange={handleIntensity} initial={intensity}/>
+        <h2>{date}</h2>
+        
+        <div className="mood-buttons">
+            <div className="button-set-container">
+                <div>
+                    <h3>Energy</h3>
+                    <ButtonSet id="energy-buttons" editable={!saved} onDataChange={handleEnergy} initial={energy}/>
+                </div>
+                <div>
+                    <h3>Mood</h3>
+                    <ButtonSet id="mood-buttons" editable={!saved} onDataChange={handleMood} initial={mood}/>
+                </div>
+                <div>
+                    <h3>Intensity</h3>
+                    <ButtonSet id="intensity-buttons" editable={!saved} onDataChange={handleIntensity} initial={intensity}/>
+                </div>
+            </div>
+            <div className="control-buttons">
+                <button onClick={handleSave}>{saved ? "Edit" : "Save"}</button>
+                <button onClick={handleDelete}>Remove</button>
+            </div>
+            <p>{ time !== "" && "Last updated: " + time}</p>
         </div>
         
-        <button onClick={handleSave}>{saved ? "Edit" : "Save"}</button>
-        <button onClick={handleDelete}>Remove</button>
-
+ 
     </div>
     );
 };
