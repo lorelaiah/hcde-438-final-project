@@ -1,88 +1,53 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../components/authContext.jsx";
 import { Link } from "react-router-dom";
-import fallbackCat1 from "../assets/cat_photo_1.png";
-import fallbackCat2 from "../assets/cat_photo_2.png";
 
 // recommendations page
 const Recommendations = () => {
     const { currentUser, loading } = useAuth();
-    const [quote, setQuote] = useState(null);
+    const [joke, setJoke] = useState(null);
     const [animalImage, setAnimalImage] = useState(null);
     const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(null);
-    const quote_api_key = "YOUR_API_KEY_HERE";
-    const picture_api_key = "YOUR API KEY HERE";
-    const fallbackCats = [fallbackCat1, fallbackCat2];
 
-    // get quotes from api or use fallback quotes if api doesn't work
-    const getQuote = useCallback(
+    // get jokes from api or use fallback quotes if api doesn't work
+    const getJoke = useCallback(
         async (signal) => {
-            const fallbackQuotes = [
-                { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-                { quote: "Life is 10% what happens to you and 90% how you react to it.", author: "Charles R. Swindoll" },
-                { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
-                { quote: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
-                { quote: "The only impossible journey is the one you never begin.", author: "Tony Robbins" }
-            ];
-
-            const API_URL = "https://api.api-ninjas.com/v1/randomquotes";
+            const url = "https://official-joke-api.appspot.com/random_joke";
 
             try {
-                const res = await fetch(API_URL, {
-                    method: "GET",
-                    headers: { "X-Api-Key": quote_api_key },
-                    signal
-                });
-
+                const res = await fetch(url);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
                 const data = await res.json();
-
-                if (data && data.length > 0) {
-                    setQuote({ quote: data[0].quote, author: data[0].author });
+                if (data && Object.keys(data).length > 0) {
+                    setJoke(data);
                 } else {
                     throw new Error("Empty API response");
                 }
-
-                return;
             } catch (err) {
-                console.error("Quote API failed:", err.message);
+                console.error("Joke API failed:", err.message);
             }
-
-            const randomQuote =
-                fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
-            setQuote(randomQuote);
         },
-        [quote_api_key]
+        []
     );
 
-    // get cat pictures from api or use fallpack pictures if api doesn't work
+    // get dog pictures from api
     const getAnimalPicture = useCallback(
         async (signal) => {
             const API_URL =
-                "https://api.api-ninjas.com/v1/randomimage?category=cat";
+                "https://dog.ceo/api/breeds/image/random";
 
             try {
-                const res = await fetch(API_URL, {
-                    method: "GET",
-                    headers: { "X-Api-Key": picture_api_key },
-                    signal
-                });
-
+                const res = await fetch(API_URL);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-                const blob = await res.blob();
-                const imageUrl = URL.createObjectURL(blob);
+                const data = await res.json();
+                const imageUrl = data.message;
                 setAnimalImage(imageUrl);
             } catch (err) {
-                console.error("Cat API failed:", err.message);
-
-                const fallback = fallbackCats[Math.floor(Math.random() * fallbackCats.length)];
-                setAnimalImage(fallback);
+                console.error("Dog API failed:", err.message);
             }
         },
-        [picture_api_key, fallbackCats]
+        []
     );
 
     const fetchData = useCallback(
@@ -90,14 +55,14 @@ const Recommendations = () => {
             setFetching(true);
             setError(null);
             try {
-                await Promise.all([getQuote(signal), getAnimalPicture(signal)]);
+                await Promise.all([getJoke(signal), getAnimalPicture(signal)]);
             } catch (err) {
                 setError("Failed to fetch recommendations.");
             } finally {
                 setFetching(false);
             }
         },
-        [getQuote, getAnimalPicture]
+        [getJoke, getAnimalPicture]
     );
 
     useEffect(() => {
@@ -109,6 +74,7 @@ const Recommendations = () => {
             if (animalImage) URL.revokeObjectURL(animalImage);
         };
     }, []); 
+
 
     if (loading) return <div>Loading...</div>;
 
@@ -125,26 +91,35 @@ const Recommendations = () => {
     return (
         <div>
             <h1>Recommendations</h1>
+            <button
+                type="button"
+                onClick={() => fetchData()}
+                disabled={fetching}
+                style={{ marginTop: 12 }}
+            >
+                {fetching ? "Refreshing..." : "Get New Inspiration"}
+            </button>
 
             {fetching && <p>Loading inspiration...</p>}
             {error && <p style={{ color: "red" }}>{error}</p>}
-
-            <h2>Quote</h2>
-            {quote ? (
-                <blockquote>
-                    <p>"{quote.quote}"</p>
-                    <footer>- {quote.author}</footer>
-                </blockquote>
+            <h2>Funny Joke!</h2>
+            {joke ? (
+                <div>
+                    <p><strong>{joke.setup}</strong></p>
+                    <p>{joke.punchline}</p>
+                    </div>
             ) : (
-                !fetching && <p>No quote available.</p>
+                !fetching && <p>No joke available.</p>
             )}
 
-            <h2>Cute Cat Picture</h2>
+            <br></br>
+
+            <h2>Cute Dog Picture</h2>
             {animalImage ? (
                 <div style={{ margin: "1rem 0" }}>
                     <img
                         src={animalImage}
-                        alt="A cat to brighten your day"
+                        alt="A cute picture to brighten your day"
                         width="400"
                         height="300"
                         style={{
@@ -156,17 +131,8 @@ const Recommendations = () => {
                     />
                 </div>
             ) : (
-                !fetching && <p>No cat image available.</p>
+                !fetching && <p>No image available.</p>
             )}
-
-            <button
-                type="button"
-                onClick={() => fetchData()}
-                disabled={fetching}
-                style={{ marginTop: 12 }}
-            >
-                {fetching ? "Refreshing..." : "Get New Inspiration"}
-            </button>
         </div>
     );
 };
