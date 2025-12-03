@@ -388,7 +388,7 @@ blockquote footer {
 @media (prefers-contrast: more) {
   :root {
     --primary-color: #4338ca;
-    --primary-dark: #312e81;
+    --primary-dark: #383664;
     --text-primary: #000000;
     --border-color: #000000;
   }
