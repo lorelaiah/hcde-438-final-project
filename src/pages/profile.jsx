@@ -37,9 +37,7 @@ const Profile = () => {
     return (
         <div>
             <h1>profile</h1>
-            <p>{currentUser.name} ? </p>
             <p>{currentUser.email}</p>
-            <p>date joined: {currentUser.date} why no work</p>
             <button onClick={handleSignOut}>sign out</button>
         </div>
     );
