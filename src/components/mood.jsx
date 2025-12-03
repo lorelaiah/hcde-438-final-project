@@ -98,22 +98,22 @@ const Mood = ({ moodId }) => {
 
     return (
     <div className="mood">
-        <h3>last updated: {date}, {time}</h3>
+        <h3>Last Updated: {date}, {time}</h3>
         <div className="button-set">
-            <p>energy</p>
+            <p>Energy</p>
             <ButtonSet id="energy-buttons" editable={!saved} onDataChange={handleEnergy} initial={energy}/>
         </div>
         <div className="button-set">
-            <p>mood</p>
+            <p>Mood</p>
             <ButtonSet id="mood-buttons" editable={!saved} onDataChange={handleMood} initial={mood}/>
         </div>
         <div className="button-set">
-            <p>intensity</p>
+            <p>Intensity</p>
             <ButtonSet id="intensity-buttons" editable={!saved} onDataChange={handleIntensity} initial={intensity}/>
         </div>
         
-        <button onClick={handleSave}>{saved ? "edit" : "save"}</button>
-        <button onClick={handleDelete}>remove</button>
+        <button onClick={handleSave}>{saved ? "Edit" : "Save"}</button>
+        <button onClick={handleDelete}>Remove</button>
 
     </div>
     );

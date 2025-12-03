@@ -33,15 +33,13 @@ const Profile = () => {
         }
     };
 
-
     return (
         <div>
-            <h1>profile</h1>
-            <p>{currentUser.email}</p>
-            <button onClick={handleSignOut}>sign out</button>
+            <h1>Profile</h1>
+            <p>Hello, {currentUser.email}</p>
+            <button onClick={handleSignOut}>Sign Out</button>
         </div>
     );
 };
-
 
 export default Profile;

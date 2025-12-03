@@ -3,25 +3,38 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color-scheme: light; 
+  background-color: #fcfcfc; 
+  color: #2d3142; 
+  --text-primary: #2d3142;
+  --text-secondary: #4f5d75;
+  --accent-color: #90d4c9; 
+  --accent-hover: #b4e3dc;
+  --nav-bg: #4a5f82; 
+  --button-bg: #f7f7f7; 
+  --mood-bg: #fdfdfd;
+  
+  /* New variable for subtle border/outline color */
+  --outline-color: #e0e0e0;
+  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   margin: 0;
   padding: 0;
+
+  font-size: 16px;
 }
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--accent-color);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--accent-hover);
 }
 
 body {
@@ -29,81 +42,88 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  min-width: 320px;
   min-height: 100vh;
+  padding-top: 4rem; 
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 3.2rem;
   line-height: 1.1;
+  color: var(--text-primary); 
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid transparent; 
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+
+  background-color: var(--button-bg); 
+  color: var(--text-primary); 
   cursor: pointer;
   transition: border-color 0.25s;
+  border-color: #d1d1d1;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--accent-color); 
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  outline: 4px auto var(--accent-hover);
 }
 
 .button-set {
-    display: flex;
-    gap: 1em;
+  display: flex;
+  /* CHANGE: Increased gap for more distance between buttons */
+  gap: 2em; 
+  flex-wrap: wrap;
 }
 
 .mood {
-    background-color: #394939;
-    border-radius: 8px;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-bottom: 12px;
+  background-color: var(--mood-bg);
+  border-radius: 8px;
+  padding: 8px 8px 12px;
+  border: 1px solid var(--outline-color); 
+  margin-right: 1.5em; 
+  margin-bottom: 1.5em; 
 }
 
 .selected {
-    background-color: #535bf2;
+  background-color: var(--accent-color);
+  color: var(--text-primary); 
+  border-color: var(--accent-color); 
 }
 
 nav {
-    top: 0;
-    width: 100%;
-    position: fixed;
-    background-color: rgb(0, 59, 59);
-    display: flex;
-    align-content: center;
-    justify-content: space-around;
+  top: 0;
+  width: 100%;
+  position: fixed;
+  background-color: var(--nav-bg); 
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.5rem;
+  z-index: 50;
+}
+
+.nav-logo {
+    color: #FFFFFF; 
+    font-size: 1.25rem; 
+    font-weight: 600;
 }
 
 .nav-link {
-    font-size: 20px;
+  font-size: 20px;
+  color: #FFFFFF; 
 }
 
-/* Responsive adjustments */
+/* Mobile Adapt */
 @media (max-width: 640px) {
-  :root {
+
+  body {
+    padding-top: 8rem; 
   }
 
   h1 { font-size: 2rem; }
@@ -112,10 +132,14 @@ nav {
     flex-direction: column;
     align-items: stretch;
     gap: 0.25rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 0.5rem;
     position: sticky;
     top: 0;
-    z-index: 40;
+  }
+
+  .nav-logo {
+    text-align: center; 
+    padding: 0.5rem 0;
   }
 
   .nav-link {
@@ -124,35 +148,30 @@ nav {
     text-align: center;
     padding: 0.8rem 0.6rem;
     font-size: 1rem;
-    background: transparent;
   }
 
   .button-set {
     flex-direction: column;
-    gap: 0.75rem;
+  }
+  
+  .mood {
+    margin-right: 0;
+    margin-bottom: 0.75rem; 
   }
 
   button {
     width: 100%;
     padding: 0.9rem 1rem;
-    font-size: 1rem;
     border-radius: 10px;
     -webkit-tap-highlight-color: rgba(0,0,0,0.05);
   }
 
   .mood {
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-bottom: 16px;
+    padding: 12px 12px 16px;
   }
 
   img, video, canvas {
     max-width: 100%;
     height: auto;
   }
-}
-
-@media (min-width: 641px) and (max-width: 960px) {
-  .nav-link { font-size: 18px; padding: 0.6rem; }
-  .button-set { gap: 0.75rem; }
 }
