@@ -1,8 +1,7 @@
-import React, from "react";
+import React, { useState, useEffect } from "react";
 import Song from "../components/song.jsx";
 import { useAuth } from "../components/authContext.jsx";
 import { Link } from "react-router-dom";
-import {useState, useEffect} from "react";
 
 const Recommendations = () => {
     const { currentUser, loading } = useAuth();
@@ -12,10 +11,9 @@ const Recommendations = () => {
     useEffect(() => {
         const getQuote = async () => {
             try {
-                const response = await fetch("https://zenquotes.io/api/today");
+                const response = await fetch("https://zenquotes.io/api/qod");
                 const data = await response.json();
-
-                setQuote(data[0]);
+                setQuote(data.qod[0]);
             } catch (err) {
                 console.log("Error fetching quote:", err.message);
             }
@@ -53,8 +51,8 @@ const Recommendations = () => {
             <h2>quotes</h2>
             {quote ? (
                 <div>
-                    <p>"{quote.q}"</p>
-                    <p>- {quote.a}</p>
+                    <p>"{quote.quote}"</p>
+                    <p>- {quote.author}</p>
                 </div>
             ) : (
                 <p>loading quote...</p>
