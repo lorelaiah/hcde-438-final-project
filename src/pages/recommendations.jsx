@@ -2,15 +2,32 @@ import React from 'react';
 import Song from "../components/song.jsx";
 import { useAuth } from "../components/authContext.jsx";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Recommendations = () => {
     const { currentUser, loading } = useAuth();
+    // add const for api data storage
+
+    useEffect(() => {
+        const getQuote = async () => {
+            try {
+                const response = await fetch(""); // add link
+                const data = await response.json();
+                // do something with the data
+            } catch(err){
+                console.log(err.message);
+            }
+        }
+        getQuote();
+    },[]);
 
     if (loading) {
         return (
             <div>loading...</div>
         );
     }
+
+
 
     if (!currentUser) {
         return (
