@@ -1,7 +1,7 @@
-import React from 'react';
 import {Link} from 'react-router-dom';
 import { useAuth } from "../components/authContext.jsx"; 
 
+// navbar with links to mood tracking, recommendations, and profile if logged in (no links displayed if not logged in)
 const Navbar = () => {
     const { currentUser, loading } = useAuth();
 
@@ -11,6 +11,7 @@ const Navbar = () => {
         );
     }
 
+    // if no user is logged in, do not show any other links (they need to login first)
     if (!currentUser) {
         return (
         <nav>
@@ -18,6 +19,7 @@ const Navbar = () => {
         </nav>
         )
     };
+
     return (
         <nav>
             <h2>ReFlect</h2>

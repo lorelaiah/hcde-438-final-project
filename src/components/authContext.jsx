@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../firebase/config.js";
 import { onAuthStateChanged } from "firebase/auth";
 
+// to access which user is currently logged in (from other files)
+
 const AuthContext = createContext();
 
 export const useAuth = () => {

@@ -7,9 +7,9 @@ import Login from './pages/login.jsx';
 import SignUp from './pages/sign-up.jsx';
 import { useAuth } from "./components/authContext.jsx"; 
 
+// set up navbar and routing
 const App = () => {
     const { currentUser } = useAuth();
-
     const pageStyle = {
         paddingTop: '0px', 
         width: '100%',
@@ -18,6 +18,7 @@ const App = () => {
         alignItems: 'center'
     };
 
+    // if nobody is logged in, redirect all pages to login/sign up
     if (!currentUser) {
         return (
             <div>

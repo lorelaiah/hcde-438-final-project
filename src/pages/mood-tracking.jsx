@@ -1,4 +1,3 @@
-
 import Mood from "../components/mood.jsx";
 import { db } from "../firebase/config.js";
 import { useState, useEffect } from "react";
@@ -6,11 +5,12 @@ import { collection, doc, query, setDoc, onSnapshot, orderBy } from "firebase/fi
 import { useAuth } from "../components/authContext.jsx"; 
 import { Link } from "react-router-dom";
 
-
+// mood tracking page
 const MoodTracking = () => {
     const [moodIds, setMoodIds] = useState([]);
     const { currentUser, loading } = useAuth();
     
+    // updates mood entries with correct data
     useEffect(() => {
         let unsubscribe = () => {};
         if (currentUser) {
@@ -29,12 +29,9 @@ const MoodTracking = () => {
         
     }, [currentUser]);
 
-    if (loading) {
-        return (
-            <div>loading...</div>
-        );
-    }
+    if (loading) return <div>Loading...</div>;
 
+    // if nobody is logged in, put link to login page instead of displaying moods
     if (!currentUser) {
         return (
             <div>
@@ -44,13 +41,12 @@ const MoodTracking = () => {
         )
     };
 
-
+    // to add a mood entry when log new mood is pressed
     const newMood = async () => {
         const newDoc = doc(collection(db, "users", currentUser.uid, "moods"));
         await setDoc(newDoc, {
             timestamp : new Date()
         });
-        console.log("added");
     }
 
     return (

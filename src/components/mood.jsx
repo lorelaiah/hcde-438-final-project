@@ -4,7 +4,7 @@ import { db } from "../firebase/config.js";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "./authContext.jsx"; 
 
-
+// updates the data in firestore for the mood using the document and user ids
 const updateMood = async (docId, newData, user) => {
     try {
         const docRef = doc(db, "users", user, "moods", docId); 
@@ -14,6 +14,7 @@ const updateMood = async (docId, newData, user) => {
     }
 };
 
+// component for each mood entry
 const Mood = ({ moodId }) => {
     const [docId, setDocId] = useState(moodId);
     const [saved, setSaved] = useState(false);
@@ -24,14 +25,15 @@ const Mood = ({ moodId }) => {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const { currentUser, loading } = useAuth();  
 
-
-
+    // gets all the previously stored data for this entry (if empty, leaves buttons unselected and not saved)
     useEffect(() => {
+        // gets the mood data from firestore (asynchronous)
         const getMoodData = async () => {
+            // checks if current user and document id exist
             if (currentUser && docId) {
                 const docRef = doc(db, "users", currentUser.uid, "moods", docId);
                 const moodDoc = await getDoc(docRef);
-
+                // makes sure mood data exsits before changing states 
                 if (moodDoc.exists()) {
                     const data = moodDoc.data();
                     setDate(data.date || "");
@@ -40,6 +42,7 @@ const Mood = ({ moodId }) => {
                     setMood(data.moodLevel || "");
                     setIntensity(data.intensityLevel || "");
                     setSaved(true);
+                    // if there's no date (new log), then keep it unsaved to make it easier for user to edit new mood entry
                     if (!data.date) {
                         setSaved(false);
                     }
@@ -49,10 +52,12 @@ const Mood = ({ moodId }) => {
         getMoodData();
     }, [docId, currentUser]);
 
-
+    // saves the mood data to firestore and sets saved state
     const handleSave = async () => {
+        // if saved, change state to not saved to allow user to edit now
         if (saved) {
             setSaved(false);
+        // if not saved, save data and change state to saved
         } else {
             const date = new Date();
             setDate(date.toLocaleDateString());
@@ -71,11 +76,13 @@ const Mood = ({ moodId }) => {
         }
     };
 
+    // removes mood entry from firestore and returns blank html so that the mood component disappears from the page
     const handleDelete = async () => {
         await deleteDoc(doc(db, "users", currentUser.uid, "moods", docId));
         return;
     };
 
+    // to update each state when buttons are clicked
     const handleEnergy = (num) => {
         setEnergy(num);
     };
@@ -85,8 +92,6 @@ const Mood = ({ moodId }) => {
     const handleIntensity = (num) => {
         setIntensity(num);
     };
-
-
 
     return (
     <div className="mood">
@@ -117,6 +122,7 @@ const Mood = ({ moodId }) => {
  
     </div>
     );
+
 };
 
 export default Mood;

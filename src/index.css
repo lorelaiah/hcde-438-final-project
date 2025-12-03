@@ -14,7 +14,6 @@
   --button-bg: #f7f7f7; 
   --mood-bg: #fdfdfd;
   
-  /* New variable for subtle border/outline color */
   --outline-color: #e0e0e0;
   
   font-synthesis: none;
@@ -76,7 +75,6 @@ button:focus-visible {
 
 .button-set {
   display: flex;
-  /* CHANGE: Increased gap for more distance between buttons */
   gap: 2em; 
   flex-wrap: wrap;
 }

@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../components/authContext.jsx";
 import { Link } from "react-router-dom";
-import fallbackCat1 from "../assets/Screenshot 2025-12-03 070408.png";
-import fallbackCat2 from "../assets/Screenshot 2025-12-03 072500.png";
+import fallbackCat1 from "../assets/cat_photo_1.png";
+import fallbackCat2 from "../assets/cat_photo_2.png";
 
+// recommendations page
 const Recommendations = () => {
     const { currentUser, loading } = useAuth();
-
     const [quote, setQuote] = useState(null);
     const [animalImage, setAnimalImage] = useState(null);
     const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(null);
-
-    const API_KEY = "YOUR_API_KEY_HERE";
-
+    const quote_api_key = "YOUR_API_KEY_HERE";
+    const picture_api_key = "YOUR API KEY HERE";
     const fallbackCats = [fallbackCat1, fallbackCat2];
 
+    // get quotes from api or use fallback quotes if api doesn't work
     const getQuote = useCallback(
         async (signal) => {
             const fallbackQuotes = [
@@ -31,7 +31,7 @@ const Recommendations = () => {
             try {
                 const res = await fetch(API_URL, {
                     method: "GET",
-                    headers: { "X-Api-Key": API_KEY },
+                    headers: { "X-Api-Key": quote_api_key },
                     signal
                 });
 
@@ -54,9 +54,10 @@ const Recommendations = () => {
                 fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
             setQuote(randomQuote);
         },
-        [API_KEY]
+        [quote_api_key]
     );
 
+    // get cat pictures from api or use fallpack pictures if api doesn't work
     const getAnimalPicture = useCallback(
         async (signal) => {
             const API_URL =
@@ -65,7 +66,7 @@ const Recommendations = () => {
             try {
                 const res = await fetch(API_URL, {
                     method: "GET",
-                    headers: { "X-Api-Key": API_KEY },
+                    headers: { "X-Api-Key": picture_api_key },
                     signal
                 });
 
@@ -81,7 +82,7 @@ const Recommendations = () => {
                 setAnimalImage(fallback);
             }
         },
-        [API_KEY, fallbackCats]
+        [picture_api_key, fallbackCats]
     );
 
     const fetchData = useCallback(
@@ -111,6 +112,7 @@ const Recommendations = () => {
 
     if (loading) return <div>Loading...</div>;
 
+    // if nobody is logged in, put link to login page instead of displaying recommendations
     if (!currentUser) {
         return (
             <div>
