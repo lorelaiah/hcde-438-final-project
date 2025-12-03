@@ -9,25 +9,35 @@ const Recommendations = () => {
     const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(null);
 
-    const getQuote = async () => {
+    const getQuote = async (signal) => {
         setFetching(true);
         setError(null);
         try {
-            const res = await fetch("https://api.quotable.io/random");
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const res = await fetch("https://api.quotable.io/random", { signal });
+            if (!res.ok) {
+                const text = await res.text().catch(() => "");
+                throw new Error(`HTTP ${res.status}${text ? `: ${text}` : ""}`);
+            }
             const data = await res.json();
             // Quotable returns { content, author }
             setQuote({ quote: data.content, author: data.author });
         } catch (err) {
-            console.error("Error fetching quote:", err);
-            setError("Could not load quote. Try again.");
+            // If aborted, don't show an error to the user
+            if (err.name === "AbortError") {
+                console.log("Quote fetch aborted");
+            } else {
+                console.error("Error fetching quote:", err);
+                setError(err.message || "Could not load quote. Try again.");
+            }
         } finally {
             setFetching(false);
         }
     };
 
     useEffect(() => {
-        getQuote();
+        const controller = new AbortController();
+        getQuote(controller.signal);
+        return () => controller.abort();
     }, []);
 
     if (loading) return <div>Loading...</div>;
@@ -50,15 +60,15 @@ const Recommendations = () => {
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             {quote ? (
-                <div>
+                <blockquote>
                     <p>"{quote.quote}"</p>
-                    <p>- {quote.author}</p>
-                </div>
+                    <footer>- {quote.author}</footer>
+                </blockquote>
             ) : (
                 !fetching && <p>No quote available.</p>
             )}
 
-            <button onClick={getQuote} disabled={fetching} style={{ marginTop: 12 }}>
+            <button type="button" onClick={() => getQuote()} disabled={fetching} style={{ marginTop: 12 }}>
                 {fetching ? "Refreshing..." : "New Quote"}
             </button>
         </div>
