@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Song from "../components/song.jsx";
 import { useAuth } from "../components/authContext.jsx";
 import { Link } from "react-router-dom";
 
@@ -7,6 +6,9 @@ const Recommendations = () => {
     const { currentUser, loading } = useAuth();
 
     const [quote, setQuote] = useState(null);
+    // This will show what useState actually returned
+    console.log([quote, setQuote]);
+
 
     useEffect(() => {
     const getQuote = async () => {
