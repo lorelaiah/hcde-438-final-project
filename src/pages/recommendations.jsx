@@ -11,9 +11,11 @@ const Recommendations = () => {
     useEffect(() => {
         const getQuote = async () => {
             try {
-                const response = await fetch("https://zenquotes.io/api/qod");
+                const response = await fetch("https://quotes.rest/qod?language=en");
                 const data = await response.json();
-                setQuote(data.qod[0]);
+
+                const q = data.contents.quotes[0];
+                setQuote(q);
             } catch (err) {
                 console.log("Error fetching quote:", err.message);
             }
@@ -48,14 +50,14 @@ const Recommendations = () => {
                 />
             </ul>
 
-            <h2>quotes</h2>
+            <h2>quote of the day</h2>
             {quote ? (
                 <div>
                     <p>"{quote.quote}"</p>
                     <p>- {quote.author}</p>
                 </div>
             ) : (
-                <p>loading quote...</p>
+                <p>fail rip</p>
             )}
         </div>
     );
