@@ -1,49 +1,110 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../components/authContext.jsx";
 import { Link } from "react-router-dom";
+import fallbackCat from "../assets/Screenshot 2025-12-03 070408.png";
 
 const Recommendations = () => {
     const { currentUser, loading } = useAuth();
 
     const [quote, setQuote] = useState(null);
+    const [animalImage, setAnimalImage] = useState(null);
     const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(null);
 
-    const getQuote = useCallback(async (signal) => {
-        const fallbackQuotes = [
-            { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-            { quote: "Life is 10% what happens to you and 90% how you react to it.", author: "Charles R. Swindoll" },
-            { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
-            { quote: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
-            { quote: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
-            { quote: "Success is not final, failure is not fatal.", author: "Winston Churchill" },
-            { quote: "You are never too old to set another goal or dream a new dream.", author: "C.S. Lewis" },
-            { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
-        ];
-        setFetching(true);
-        setError(null);
-        try {
-            const res = await fetch("https://api.quotable.io/random", { signal, timeout: 5000 });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            console.log("✓ Success with direct API", data);
-            setQuote({ quote: data.content, author: data.author });
-            setFetching(false);
-            return;
-        } catch (err) {
-            console.log("Direct API failed:", err.message);
-        }
+    const API_KEY = "YOUR_API_KEY_HERE"; 
 
-        const randomQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
-        setQuote(randomQuote);
-        setFetching(false);
-    }, []);
+    const getQuote = useCallback(
+        async (signal) => {
+            const fallbackQuotes = [
+                { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+                { quote: "Life is 10% what happens to you and 90% how you react to it.", author: "Charles R. Swindoll" },
+                { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+                { quote: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+                { quote: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+            ];
+
+            const API_URL = "https://api.api-ninjas.com/v1/randomquotes";
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: "GET",
+                    headers: { "X-Api-Key": API_KEY },
+                    signal
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                if (data && data.length > 0) {
+                    setQuote({ quote: data[0].quote, author: data[0].author });
+                } else {
+                    throw new Error("API returned empty response");
+                }
+                return;
+            } catch (err) {
+                console.error("Quote API failed:", err.message);
+            }
+
+            const randomQuote =
+                fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+            setQuote(randomQuote);
+        },
+        [API_KEY]
+    );
+
+    const getAnimalPicture = useCallback(
+        async (signal) => {
+            const URL_FALLBACK = "https://placekitten.com/400/300";
+
+            const FALLBACK_IMAGE = fallbackCat || URL_FALLBACK;
+
+            const API_URL =
+                "https://api.api-ninjas.com/v1/randomimage?category=cat";
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: "GET",
+                    headers: { "X-Api-Key": API_KEY },
+                    signal
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const blob = await res.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setAnimalImage(imageUrl);
+            } catch (err) {
+                console.error("Cat API failed:", err.message);
+                setAnimalImage(FALLBACK_IMAGE);
+            }
+        },
+        [API_KEY]
+    );
+
+    const fetchData = useCallback(
+        async (signal) => {
+            setFetching(true);
+            setError(null);
+            try {
+                await Promise.all([getQuote(signal), getAnimalPicture(signal)]);
+            } catch (err) {
+                setError("Failed to fetch recommendations.");
+            } finally {
+                setFetching(false);
+            }
+        },
+        [getQuote, getAnimalPicture]
+    );
 
     useEffect(() => {
         const controller = new AbortController();
-        getQuote(controller.signal);
-        return () => controller.abort();
-    }, [getQuote]);
+        fetchData(controller.signal);
+
+        return () => {
+            controller.abort();
+            if (animalImage) URL.revokeObjectURL(animalImage);
+        };
+    }, []); 
 
     if (loading) return <div>Loading...</div>;
 
@@ -59,11 +120,11 @@ const Recommendations = () => {
     return (
         <div>
             <h1>Recommendations</h1>
-            <h2>Quote</h2>
 
-            {fetching && <p>Loading quote...</p>}
+            {fetching && <p>Loading inspiration...</p>}
             {error && <p style={{ color: "red" }}>{error}</p>}
 
+            <h2>Quote</h2>
             {quote ? (
                 <blockquote>
                     <p>"{quote.quote}"</p>
@@ -73,8 +134,33 @@ const Recommendations = () => {
                 !fetching && <p>No quote available.</p>
             )}
 
-            <button type="button" onClick={() => getQuote()} disabled={fetching} style={{ marginTop: 12 }}>
-                {fetching ? "Refreshing..." : "New Quote"}
+            <h2>Cute Cat Picture</h2>
+            {animalImage ? (
+                <div style={{ margin: "1rem 0" }}>
+                    <img
+                        src={animalImage}
+                        alt="A cat to brighten your day"
+                        width="400"
+                        height="300"
+                        style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                            borderRadius: "8px",
+                            boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+                        }}
+                    />
+                </div>
+            ) : (
+                !fetching && <p>No cat image available.</p>
+            )}
+
+            <button
+                type="button"
+                onClick={() => fetchData()}
+                disabled={fetching}
+                style={{ marginTop: 12 }}
+            >
+                {fetching ? "Refreshing..." : "Get New Inspiration"}
             </button>
         </div>
     );
