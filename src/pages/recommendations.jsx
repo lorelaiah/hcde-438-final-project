@@ -10,7 +10,7 @@ const Recommendations = () => {
     const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(null);
 
-    // get jokes from api or use fallback quotes if api doesn't work
+    // get jokes from api
     const getJoke = useCallback(
         async (signal) => {
             const url = "https://official-joke-api.appspot.com/random_joke";
