@@ -23,35 +23,38 @@ const Mood = ({ moodId }) => {
     const [intensity, setIntensity] = useState();
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
-    const { currentUser, loading } = useAuth();
+    const { currentUser, loading } = useAuth();  
+
 
 
     useEffect(() => {
         const getMoodData = async () => {
             if (currentUser && docId) {
                 const docRef = doc(db, "users", currentUser.uid, "moods", docId);
-                const mood = await getDoc(docRef);
+                const moodDoc = await getDoc(docRef);
 
-                if (mood.exists()) {
-                    const data = mood.data();
+                if (moodDoc.exists()) {
+                    const data = moodDoc.data();
                     setDate(data.date || "");
                     setTime(data.time || "");
                     setEnergy(data.energyLevel || "");
+                    console.log("energy level saved " + data.energyLevel);
                     setMood(data.moodLevel || "");
+                    console.log("mood level saved " + data.moodLevel);
                     setIntensity(data.intensityLevel || "");
+                    console.log("intensity level saved " + data.intensityLevel);
                     setSaved(true);
                     if (!data.date) {
                         setSaved(false);
                     }
                 }
-                // if (mood.exists() && !mood.data().date) {
-                //         setSaved(false);
-                //         console.log("NO DATE!!!!!!!!");
-                // }
             }
         };
 
         getMoodData();
+    console.log("energy level " + energy);
+    console.log("mood level " + mood);
+    console.log("intensity level " + intensity);
     }, [docId, currentUser]);
 
 
@@ -92,20 +95,21 @@ const Mood = ({ moodId }) => {
     };
 
 
+
     return (
     <div className="mood">
         <h3>last updated: {date}, {time}</h3>
         <div className="button-set">
             <p>energy</p>
-            <ButtonSet id="energy-buttons" editable={!saved} onDataChange={handleEnergy}/>
+            <ButtonSet id="energy-buttons" editable={!saved} onDataChange={handleEnergy} initial={energy}/>
         </div>
         <div className="button-set">
             <p>mood</p>
-            <ButtonSet id="mood-buttons" editable={!saved} onDataChange={handleMood}/>
+            <ButtonSet id="mood-buttons" editable={!saved} onDataChange={handleMood} initial={mood}/>
         </div>
         <div className="button-set">
             <p>intensity</p>
-            <ButtonSet id="intensity-buttons" editable={!saved} onDataChange={handleIntensity}/>
+            <ButtonSet id="intensity-buttons" editable={!saved} onDataChange={handleIntensity} initial={intensity}/>
         </div>
         
         <button onClick={handleSave}>{saved ? "edit" : "save"}</button>
