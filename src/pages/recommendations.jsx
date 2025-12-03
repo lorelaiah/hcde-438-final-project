@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../components/authContext.jsx";
 import { Link } from "react-router-dom";
-import fallbackCat from "../assets/Screenshot 2025-12-03 070408.png";
+import fallbackCat1 from "../assets/Screenshot 2025-12-03 070408.png";
+import fallbackCat2 from "../assets/Screenshot 2025-12-03 072500.png";
 
 const Recommendations = () => {
     const { currentUser, loading } = useAuth();
@@ -11,7 +12,9 @@ const Recommendations = () => {
     const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(null);
 
-    const API_KEY = "YOUR_API_KEY_HERE"; 
+    const API_KEY = "YOUR_API_KEY_HERE";
+
+    const fallbackCats = [fallbackCat1, fallbackCat2];
 
     const getQuote = useCallback(
         async (signal) => {
@@ -20,7 +23,7 @@ const Recommendations = () => {
                 { quote: "Life is 10% what happens to you and 90% how you react to it.", author: "Charles R. Swindoll" },
                 { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
                 { quote: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
-                { quote: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+                { quote: "The only impossible journey is the one you never begin.", author: "Tony Robbins" }
             ];
 
             const API_URL = "https://api.api-ninjas.com/v1/randomquotes";
@@ -33,13 +36,15 @@ const Recommendations = () => {
                 });
 
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
                 const data = await res.json();
 
                 if (data && data.length > 0) {
                     setQuote({ quote: data[0].quote, author: data[0].author });
                 } else {
-                    throw new Error("API returned empty response");
+                    throw new Error("Empty API response");
                 }
+
                 return;
             } catch (err) {
                 console.error("Quote API failed:", err.message);
@@ -54,10 +59,6 @@ const Recommendations = () => {
 
     const getAnimalPicture = useCallback(
         async (signal) => {
-            const URL_FALLBACK = "https://placekitten.com/400/300";
-
-            const FALLBACK_IMAGE = fallbackCat || URL_FALLBACK;
-
             const API_URL =
                 "https://api.api-ninjas.com/v1/randomimage?category=cat";
 
@@ -75,10 +76,12 @@ const Recommendations = () => {
                 setAnimalImage(imageUrl);
             } catch (err) {
                 console.error("Cat API failed:", err.message);
-                setAnimalImage(FALLBACK_IMAGE);
+
+                const fallback = fallbackCats[Math.floor(Math.random() * fallbackCats.length)];
+                setAnimalImage(fallback);
             }
         },
-        [API_KEY]
+        [API_KEY, fallbackCats]
     );
 
     const fetchData = useCallback(
