@@ -15,14 +15,14 @@ const Navbar = () => {
     if (!currentUser) {
         return (
         <nav>
-            <h2>ReFlect</h2>
+            <h2 className="nav-name">ReFlect</h2>
         </nav>
         )
     };
 
     return (
         <nav>
-            <h2>ReFlect</h2>
+            <h2 className="nav-name">ReFlect</h2>
             <Link className="nav-link" to="/">MOOD TRACKING </Link>
             <Link className="nav-link" to="/recommendations"> RECOMMENDATIONS </Link>
             <Link className="nav-link" to="/profile"> PROFILE</Link>

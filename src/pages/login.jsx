@@ -27,6 +27,7 @@ const Login = () => {
         // if fail, show error message
         } catch (err) {
             setError("Failed to log in. Please try again.");
+            console.print(err);
         } finally {
             setLoading(false);
         }
@@ -36,7 +37,6 @@ const Login = () => {
         <div className="auth-container">
         <div className="auth-form-container">
             <h2>Log In</h2>
-            {error && <div className="auth-error">{error}</div>}
             
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="form-group">
@@ -60,6 +60,8 @@ const Login = () => {
                     required
                     />
                 </div>
+
+                {error && <div className="auth-error">{error}</div>}
                 
                 <button 
                     type="submit" 

@@ -65,7 +65,7 @@ const SignUp = () => {
         <div className="auth-container">
         <div className="auth-form-container">
             <h2>Create Account</h2>
-            {error && <div className="auth-error">{error}</div>}
+            
             
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="form-group">
@@ -111,6 +111,8 @@ const SignUp = () => {
                     required
                     />
                 </div>
+
+                {error && <div className="auth-error">{error}</div>}
                 
                 <button 
                     type="submit" 
