@@ -6,51 +6,61 @@ const Recommendations = () => {
     const { currentUser, loading } = useAuth();
 
     const [quote, setQuote] = useState(null);
-    // This will show what useState actually returned
-    console.log([quote, setQuote]);
+    const [fetching, setFetching] = useState(false);
+    const [error, setError] = useState(null);
 
-
-    useEffect(() => {
     const getQuote = async () => {
+        setFetching(true);
+        setError(null);
         try {
-            const response = await fetch("https://api.api-ninjas.com/v1/randomquotes", {
-                headers: { "X-Api-Key": "YOUR_API_KEY_HERE" }
-            });
-            const data = await response.json();
-            setQuote(data[0]);
+            const res = await fetch("https://api.quotable.io/random");
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            // Quotable returns { content, author }
+            setQuote({ quote: data.content, author: data.author });
         } catch (err) {
-            console.log("Error fetching quote:", err.message);
+            console.error("Error fetching quote:", err);
+            setError("Could not load quote. Try again.");
+        } finally {
+            setFetching(false);
         }
     };
-    getQuote();
-}, []);
 
+    useEffect(() => {
+        getQuote();
+    }, []);
 
-    if (loading) {
-        return <div>that one error again unfort</div>;
-    }
+    if (loading) return <div>Loading...</div>;
 
     if (!currentUser) {
         return (
             <div>
-                <p>login to view recommendations</p>
-                <Link to="/login">login page</Link>
+                <p>Please log in to view recommendations</p>
+                <Link to="/login">Go to login</Link>
             </div>
         );
     }
 
     return (
         <div>
-            <h1>recommendations</h1>
-            <h2>quote of the day</h2>
+            <h1>Recommendations</h1>
+            <h2>Quote</h2>
+
+            {fetching && <p>Loading quote...</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
+
             {quote ? (
                 <div>
                     <p>"{quote.quote}"</p>
                     <p>- {quote.author}</p>
                 </div>
             ) : (
-                <p>fail rip</p>
+                !fetching && <p>No quote available.</p>
             )}
+
+            <button onClick={getQuote} disabled={fetching} style={{ marginTop: 12 }}>
+                {fetching ? "Refreshing..." : "New Quote"}
+            </button>
         </div>
     );
 };
