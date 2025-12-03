@@ -11,10 +11,14 @@ const Recommendations = () => {
     useEffect(() => {
         const getQuote = async () => {
             try {
-                const response = await fetch("https://quotes.rest/qod?language=en");
+                const response = await fetch("https://api.api-ninjas.com/v1/quotes", {
+                    headers: { 
+                        "X-Api-Key": "Enter key here"
+                    }
+                });
                 const data = await response.json();
 
-                const q = data.contents.quotes[0];
+                const q = data[0];
                 setQuote(q);
             } catch (err) {
                 console.log("Error fetching quote:", err.message);
@@ -25,7 +29,7 @@ const Recommendations = () => {
     }, []);
 
     if (loading) {
-        return <div>loading...</div>;
+        return <div>that one error again unfort</div>;
     }
 
     if (!currentUser) {
