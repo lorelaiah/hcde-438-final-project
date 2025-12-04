@@ -49,17 +49,20 @@ const MoodTracking = () => {
         });
     }
 
-    return (
-        <div>
-            <h1>Mood Tracker</h1>
-            <button onClick={newMood}>Log New Mood</button>
-            {moodIds.map((id) => (
-                <div key={id}>
-                <Mood moodId={id} />
+        return (
+            <div className="mood-tracking-page">
+                        <h1>Mood Tracker</h1>
+                        <button onClick={newMood}>Log New Mood</button>
+
+                        <div className="mood-list">
+                            {moodIds.map((id) => (
+                                <div key={id} className="mood-item">
+                                    <Mood moodId={id} />
+                                </div>
+                            ))}
+                        </div>
                 </div>
-            ))}            
-        </div>
-    )
+        )
 };
 
 export default MoodTracking;

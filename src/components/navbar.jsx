@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import { useAuth } from "../components/authContext.jsx"; 
 
 // navbar with links to mood tracking, recommendations, and profile if logged in (no links displayed if not logged in)
@@ -11,14 +11,16 @@ const Navbar = () => {
         );
     }
 
-    // if no user is logged in, do not show any other links (they need to login first)
-    if (!currentUser) {
-        return (
-        <nav>
-            <h2 className="nav-name">ReFlect</h2>
-        </nav>
-        )
-    };
+        // if no user is logged in, show only app name
+        if (!currentUser) {
+                const location = useLocation();
+                const isAuthPage = location.pathname === "/login" || location.pathname === "/sign-up" || location.pathname === "/";
+                return (
+                <nav>
+                        <h2 className={isAuthPage ? "nav-name nav-welcome" : "nav-name"}>ReFlect</h2>
+                </nav>
+                )
+        };
 
     return (
         <nav>
